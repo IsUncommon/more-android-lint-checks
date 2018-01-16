@@ -2,10 +2,11 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 dependencies {
+	testCompile "junit:junit:4.12"
+	testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
 	compileOnly "com.android.tools.lint:lint-api:$lintVersion"
 	compileOnly "com.android.tools.lint:lint-checks:$lintVersion"
-
-	testCompile "junit:junit:4.12"
 	testCompile "com.android.tools.lint:lint:$lintVersion"
 	testCompile "com.android.tools.lint:lint-tests:$lintVersion"
 	testCompile "com.android.tools:testutils:$lintVersion"

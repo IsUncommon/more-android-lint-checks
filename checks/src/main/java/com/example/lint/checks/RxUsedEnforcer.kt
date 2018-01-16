@@ -3,18 +3,13 @@ package com.example.lint.checks
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.*
 import com.android.tools.lint.detector.api.Detector.UastScanner
-import org.jetbrains.uast.UCallExpression
-import org.jetbrains.uast.ULocalVariable
-import org.jetbrains.uast.asRecursiveLogString
-import org.jetbrains.uast.java.JavaUCompositeQualifiedExpression
-import org.jetbrains.uast.java.JavaUReturnExpression
-import java.util.*
+import org.jetbrains.uast.*
 
 /**
  * Created by rakshak_cont on 12/01/18.
  */
 
-class RxUsedEnforcerK : Detector(), UastScanner {
+class RxUsedEnforcer : Detector(), UastScanner {
 
 	override fun getApplicableUastTypes() =
 			listOf(UCallExpression::class.java)
@@ -26,12 +21,11 @@ class RxUsedEnforcerK : Detector(), UastScanner {
 			override fun visitCallExpression(node: UCallExpression) {
 				val returnType = node.returnType ?: return
 
-				val valid = RX_PRIMITIVE_CANONICAL_NAMES.any { it.startsWith(returnType.canonicalText) } &&
-						node.uastParent !is JavaUCompositeQualifiedExpression &&
+				val valid = RX_PRIMITIVE_CANONICAL_NAMES.any { returnType.canonicalText.startsWith(it) } &&
+						node.uastParent !is UQualifiedReferenceExpression &&
 						node.uastParent !is ULocalVariable &&
-						node.uastParent !is JavaUReturnExpression
+						node.uastParent !is UReturnExpression
 
-				println("reporting from visitCallExpression => $node => ${node.uastParent!!.javaClass.canonicalName} => ${returnType.canonicalText} => valid=$valid")
 				if (valid) {
 					context.report(ISSUE,
 							context.getCallLocation(node, false, false),
@@ -45,7 +39,7 @@ class RxUsedEnforcerK : Detector(), UastScanner {
 
 	companion object {
 
-		private val RX_PRIMITIVE_CANONICAL_NAMES = Arrays.asList(
+		private val RX_PRIMITIVE_CANONICAL_NAMES = listOf(
 				"io.reactivex.Observable",
 				"io.reactivex.Single",
 				"io.reactivex.Completable",
@@ -54,13 +48,13 @@ class RxUsedEnforcerK : Detector(), UastScanner {
 		)
 
 		internal val ISSUE = Issue.create(
-				RxUsedEnforcerK::class.java.simpleName,
+				RxUsedEnforcer::class.java.simpleName,
 				"Make sure function returning Rx type is being used (typically `subscribe()`)",
 				"",
 				Category.CORRECTNESS,
 				10,
 				Severity.ERROR,
-				Implementation(RxUsedEnforcerK::class.java, Scope.JAVA_FILE_SCOPE)
+				Implementation(RxUsedEnforcer::class.java, Scope.JAVA_FILE_SCOPE)
 		)
 	}
 }
