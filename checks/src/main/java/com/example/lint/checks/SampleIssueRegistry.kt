@@ -16,18 +16,17 @@
 package com.example.lint.checks
 
 import com.android.tools.lint.client.api.IssueRegistry
-import java.util.*
 
 /*
  * The list of issues that will be checked when running <code>lint</code>.
  */
 class SampleIssueRegistry : IssueRegistry() {
 
-  override val api = com.android.tools.lint.detector.api.CURRENT_API
+	override val api = com.android.tools.lint.detector.api.CURRENT_API
 
-  override val issues = listOf(
-      SampleCodeDetector.ISSUE,
-      RxUsedEnforcerK.ISSUE
-  )
+	override val issues = listOf(
+			SampleCodeDetector.ISSUE,
+			RxUsedEnforcerK.ISSUE
+	)
 }
 

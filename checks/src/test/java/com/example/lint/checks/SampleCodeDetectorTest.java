@@ -23,29 +23,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class SampleCodeDetectorTest extends LintDetectorTest {
-    public void testBasic() {
-        lint().files(
-                java("" +
-                        "package test.pkg;\n" +
-                        "public class TestClass1 {\n" +
-                        "    // In a comment, mentioning \"lint\" has no effect\n" +
-                        "    private static String s1 = \"Ignore non-word usages: linting\";\n" +
-                        "    private static String s2 = \"Let's say it: lint\";\n" +
-                        "}"))
-                .run()
-                .expect("src/test/pkg/TestClass1.java:5: Warning: This code mentions lint: Congratulations [ShortUniqueId]\n" +
-                        "    private static String s2 = \"Let's say it: lint\";\n" +
-                        "                               ~~~~~~~~~~~~~~~~~~~~\n" +
-                        "0 errors, 1 warnings\n");
-    }
+	public void testBasic() {
+		lint().files(
+				java("" +
+						"package test.pkg;\n" +
+						"public class TestClass1 {\n" +
+						"    // In a comment, mentioning \"lint\" has no effect\n" +
+						"    private static String s1 = \"Ignore non-word usages: linting\";\n" +
+						"    private static String s2 = \"Let's say it: lint\";\n" +
+						"}"))
+				.run()
+				.expect("src/test/pkg/TestClass1.java:5: Warning: This code mentions lint: Congratulations [ShortUniqueId]\n" +
+						"    private static String s2 = \"Let's say it: lint\";\n" +
+						"                               ~~~~~~~~~~~~~~~~~~~~\n" +
+						"0 errors, 1 warnings\n");
+	}
 
-    @Override
-    protected Detector getDetector() {
-        return new SampleCodeDetector();
-    }
+	@Override
+	protected Detector getDetector() {
+		return new SampleCodeDetector();
+	}
 
-    @Override
-    protected List<Issue> getIssues() {
-        return Collections.singletonList(SampleCodeDetector.ISSUE);
-    }
+	@Override
+	protected List<Issue> getIssues() {
+		return Collections.singletonList(SampleCodeDetector.ISSUE);
+	}
 }
